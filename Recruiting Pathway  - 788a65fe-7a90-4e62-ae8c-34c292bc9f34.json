@@ -1,0 +1,547 @@
+{
+  "nodes": [
+    {
+      "id": "1",
+      "data": {
+        "name": "Start",
+        "prompt": "You should greet the user and introduce yourself as Blandie, the interview assistant at Bland AI. Then, ask the user to provide their first and last name. Wait for their answer, extract both values, and confirm them back by saying: \"Thanks, {{first_name}} {{last_name}}. Is that correct?\"\n\nEnsure both `first_name` and `last_name` are parsed and saved into their corresponding variables before continuing.\n\nThen ask: “Great! Are you ready to begin the interview now?”\n\n\n",
+        "isStart": true,
+        "condition": "Continue looping if either `first_name` or `last_name` is missing or not parsed correctly. Only proceed when both variables are extracted and confirmed by the user.\n",
+        "extractVars": [
+          [
+            "first_name",
+            "string",
+            "Ask the user for their first name. Extract only the first name they mention (e.g., John, Álvaro). Don't include last names or full names.",
+            false
+          ],
+          [
+            "last_name",
+            "string",
+            "Ask the user for their last name. Extract only the surname (e.g., Smith, Vázquez). Do not extract first names.",
+            false,
+            false
+          ]
+        ],
+        "modelOptions": {
+          "modelType": "smart",
+          "temperature": 0.2,
+          "isSMSReturnNode": false,
+          "skipUserResponse": false,
+          "disableEndCallTool": false,
+          "block_interruptions": false,
+          "disableSilenceRepeat": false
+        },
+        "extractVarSettings": {}
+      },
+      "type": "Default",
+      "position": {
+        "x": 356.0639626480707,
+        "y": 17.96108536689175
+      }
+    },
+    {
+      "id": "6431470d-5a67-4365-8142-992c1e2ed8f4",
+      "data": {
+        "name": "End the call",
+        "text": "Sorry to disturb you, we'll call back at another time.",
+        "modelOptions": {
+          "modelType": "smart",
+          "temperature": 0.2,
+          "skipUserResponse": false,
+          "block_interruptions": false
+        }
+      },
+      "type": "End Call",
+      "position": {
+        "x": -51.7683297053029,
+        "y": 342.9804973183529
+      }
+    },
+    {
+      "id": "3031d519-ff7b-4ede-9647-7e35fb8d34c5",
+      "data": {
+        "name": "Confirm Information",
+        "text": "Hello {{first_name}}, according to our records, you applied for the position on {{date_applied}}. Can you confirm that this date is correct?",
+        "condition": "The user confirms the application date is correct by saying \"yes\", \"that's right\", \"correct\", or any similar confirmation.\n",
+        "modelOptions": {
+          "modelType": "smart",
+          "temperature": 0.2,
+          "isSMSReturnNode": false,
+          "skipUserResponse": false,
+          "disableEndCallTool": false,
+          "block_interruptions": false,
+          "disableSilenceRepeat": false
+        }
+      },
+      "type": "Default",
+      "position": {
+        "x": 258.3181143154997,
+        "y": 727.7613861852357
+      }
+    },
+    {
+      "id": "63a72361-1272-45ba-ab41-86e4730e0185",
+      "data": {
+        "name": "Ask Salary Expectations",
+        "prompt": "You should say: \"To continue with the process, can you tell me your annual salary expectations in dollars (usd)?\"\n\nExtract the user's expected yearly salary in USD as a number only. Ignore dollar signs, commas, or text like \"usd\". Return only the number or null if it's not clear. Examples:\n- “Around $200,000” → 200000  \n- “600000 usd” → 600000  \n- “No idea yet” → null\n",
+        "condition": "The user responds with a valid numerical annual salary in USD, ideally between 10,000 and 1,000,000.\n\nIf the value is greater than 500,000 → Route to “High Expectations”.\nIf the value is 500,000 or less → Route to “Normal Expectations”.\n\nReject any responses that are not numbers or are unrealistically high or low.\n\n\n",
+        "extractVars": [
+          [
+            "year_salary",
+            "integer",
+            "Extract the user's expected annual salary from the conversation (e.g., \"70,000\", \"USD 85k\", or \"around 100k\").\n",
+            true
+          ]
+        ],
+        "modelOptions": {
+          "modelType": "smart",
+          "newTemperature": 0.5,
+          "isSMSReturnNode": false,
+          "skipUserResponse": false,
+          "disableEndCallTool": false,
+          "block_interruptions": false,
+          "disableSilenceRepeat": false
+        },
+        "extractVarSettings": {}
+      },
+      "type": "Default",
+      "position": {
+        "x": 246.0227785914003,
+        "y": 1041.651279439472
+      }
+    },
+    {
+      "id": "a0b3387d-e269-4fc4-8939-750331918c99",
+      "data": {
+        "name": "User asks position question",
+        "prompt": "Using the knowledge base below, answer their question about the position and ask the user if you've answered their question.\n\n\n==INFORMATION==\n**About Bland.ai**\n\nAt Bland.ai, our goal is to empower enterprises to create AI phone agents at scale.\nBased in San Francisco, we're a fast-growing team striving to revolutionize how customers interact with businesses. \nWe are backed by some of Silicon Valley's finest, including founders of Twilio, Affirm, ElevenLabs, and many more.\n\n- This is a full-time hybrid role in San Francisco.\n\n**Role Description:**\n\nThis is a full-time role located in San Francisco, CA, though it is okay to be remote sometimes! As a Support Engineer at \nBland.ai, your primary responsibility will be ensuring the success of our enterprise customers as they go live with their\nAI phone agents. You will help with prompting, integrations, and directly support customers to ensure they have everything \nthey need to succeed. This is a hands-on, customer-facing role. We are a startup, and we need people who understand what that means.\n\nWe aren't a super traditional team, but we are an extremely effective one. We love unique backgrounds, hard workers, and intelligent people who take pride in everything they do.\n\n**Things You Might Do:**\n\n- Onboard enterprise customers, helping with initial prompting, integrations, and setup.\n- Conduct weekly check-in calls with project leaders and weekly workshops with engineers.\n- Handle any customer needs and take the necessary actions to meet them.\n\n**You Will…**\n\n- Work closely with our customer success and sales teams to better understand our customers' needs and how we can ensure their success.\n- Build conversational pathways for and with our customers.\n- Spend time on customer calls, providing support to sales.\n\n**Required Skills and Experience:**\n\n- Minimum of 2+ years of work experience in customer success, sales engineering, software engineering, or a similar position.\n- Experience with AI/ML applications and comfort with prompt engineering.\n- Minimum of 1+ years in a customer-facing engineering role, ideally in enterprise settings.\n- Strong desire to ensure customers are successful.\n- Attention to detail and ability to collaborate cross-functionally on a small team.\n- Comfort working full-stack, from building React components to developing APIs and integrating with third-party services.\n- Willingness to work outside the typical 9-5 hours, with availability at odd hours.\n\n**Bonus Points:**\n\n- Experience in building enterprise-level AI services.\n- Experience with LLMs.\n- Experience at a startup.\n\n**Benefits and Pay:**\n\n- Healthcare, dental, vision, and other benefits.\n- OTE: $140,000-$500000.\n- All the tools you need to succeed.\n- Equity.\n\n*If you don't have the perfect experience, that's fine! We're a bunch of drop-outs and hackers. Working at a startup is really hard. We work a lot and figure things out on the fly.*\n",
+        "isGlobal": true,
+        "globalLabel": "User asks a question about the job or position",
+        "modelOptions": {
+          "modelType": "smart",
+          "temperature": 0.2,
+          "isSMSReturnNode": false,
+          "skipUserResponse": false,
+          "disableEndCallTool": false,
+          "block_interruptions": false,
+          "disableSilenceRepeat": false
+        },
+        "globalDescription": "ONLY Select this pathway if the user asks a question about the job position they applied for or about Bland AI. DO NOT select this pathway under any other circumstance."
+      },
+      "type": "Default",
+      "position": {
+        "x": 940,
+        "y": 66
+      }
+    },
+    {
+      "id": "72626295-caf6-4355-961c-43611d5796cf",
+      "data": {
+        "name": "High Expectations",
+        "prompt": "Thanks for sharing your salary expectations. I’ve noted your response. If you’re requesting over $500,000, I’ll connect you with one of our recruiters to continue the conversation",
+        "modelOptions": {
+          "modelType": "smart",
+          "temperature": 0.2,
+          "isSMSReturnNode": false,
+          "skipUserResponse": false,
+          "disableEndCallTool": false,
+          "block_interruptions": false,
+          "disableSilenceRepeat": false
+        }
+      },
+      "type": "Default",
+      "position": {
+        "x": -346.8426555423493,
+        "y": 1280.15865951944
+      }
+    },
+    {
+      "id": "1d079ab8-a1c3-4ea5-b934-89f3d645083a",
+      "data": {
+        "name": "Normal Expectations",
+        "text": "Thanks for sharing that! I’m available to interview you. Could you let me know a good date and time that works for you?",
+        "condition": "The user must mention a day or time, such as “Monday”, “Tuesday”, or “10 AM”, “3:30 PM”. You should only continue once the user provides a valid date or time for the interview.\n",
+        "extractVars": [
+          [
+            "interview_date",
+            "string",
+            "Extract the user's interview availability or date from the conversation.\n",
+            false
+          ],
+          [
+            "interview_time",
+            "string",
+            "Extract the user's preferred interview time from the conversation (e.g., 3 PM, 14:30, noon).\n",
+            false,
+            false
+          ]
+        ],
+        "modelOptions": {
+          "modelType": "smart",
+          "temperature": 0.2,
+          "isSMSReturnNode": false,
+          "skipUserResponse": false,
+          "disableEndCallTool": false,
+          "block_interruptions": false,
+          "disableSilenceRepeat": false
+        },
+        "extractVarSettings": {}
+      },
+      "type": "Default",
+      "position": {
+        "x": 813.2979663599963,
+        "y": 1230.772648192945
+      }
+    },
+    {
+      "id": "0d5f50f4-526f-4ca0-b2c7-3961a7604a5a",
+      "data": {
+        "tag": [],
+        "url": "https://recruiting-1.onrender.com/recruiting/exampleApi/book-appointment",
+        "body": "{\n  \"first_name\": \"juan\",               \n  \"last_name\": \"perez\",           \n  \"interview_date\": \"17-07-2025\",    \n  \"interview_time\": \"15:30\"       \n}\n",
+        "name": "Continue Interview",
+        "text": "TEST API REQUEST",
+        "method": "POST",
+        "headers": [
+          [
+            "bland-api-key",
+            "org_5a424edb9482734c49f99b248e02855119423bfa25fad944463628bdd1ae1befacdbd0be5a41db2121dc69"
+          ],
+          [
+            "Content-Type",
+            "application/json"
+          ]
+        ],
+        "max_retries": 0,
+        "modelOptions": {
+          "modelType": "smart",
+          "temperature": 0.2,
+          "skipUserResponse": true,
+          "block_interruptions": true
+        },
+        "timeoutValue": 10,
+        "responsePathways": [
+          [
+            "Default/Webhook Completion",
+            "",
+            "",
+            {
+              "id": "5f43d5be-607c-435c-a76b-44a472070925",
+              "name": "End Call Success"
+            }
+          ]
+        ]
+      },
+      "type": "Webhook",
+      "position": {
+        "x": 795.6964995073263,
+        "y": 1442.235841455872
+      }
+    },
+    {
+      "id": "5f43d5be-607c-435c-a76b-44a472070925",
+      "data": {
+        "name": "Tell the customer that you’d like to schedule an interview, ask them for a date and time that works for them",
+        "prompt": "You must ask the user to provide a specific interview date and time. Do not proceed until you have extracted both interview_date and interview_time. Examples of valid responses: “Monday at 8 am”, “Thursday at 6 pm.” \nInterviews are only conducted Monday through Friday, between 8:00 AM and 6:00 PM local time. Please clearly explain this to the user.\n\nYou should ask the user to provide a specific time for the interview, not a time range. If the user mentions a range like \"between 8 am and 6 pm\", ask them to choose one exact time within that range. Only proceed once a valid interview_date and interview_time are provided. Example: \"Monday at 9 am\"\n\nYou should ask the user for a specific time, not a vague reference like \"after 3 pm\" or \"in the afternoon\". If they say something vague, ask them to clarify with a specific time. Only proceed once you extract a valid interview_date and interview_time. Example: \"Monday at 3 pm\"\n\nOnly accept interview times between 8 am and 6 pm. If the user mentions a time outside of this range, respond: \"Thanks! Just to confirm, our available interview slots are between 8 am and 6 pm. Would you like to pick a time within that window?\"\n\n\n\n",
+        "condition": "You must  extract this information: interview_date and interview_time. Example: Monday at 9 am",
+        "extractVars": [
+          [
+            "interview_date",
+            "string",
+            "Extract the user's interview date",
+            false
+          ],
+          [
+            "interview_time",
+            "string",
+            "Extract the user's interview time",
+            false,
+            false
+          ]
+        ],
+        "modelOptions": {
+          "modelType": "smart",
+          "temperature": 0.2,
+          "isSMSReturnNode": false,
+          "skipUserResponse": false,
+          "disableEndCallTool": false,
+          "block_interruptions": false,
+          "disableSilenceRepeat": false
+        },
+        "extractVarSettings": {}
+      },
+      "type": "Default",
+      "position": {
+        "x": 759.0834151491872,
+        "y": 1785.643598307697
+      }
+    },
+    {
+      "id": "bb39cede-b0f9-4e91-b69b-d5e424fdc09c",
+      "data": {
+        "tag": [],
+        "url": "https://recruiting-1.onrender.com/recruiting/exampleApi/get-user-info",
+        "body": "{\n  \"first_name\": \"juan\",\n  \"last_name\": \"perez\"\n}\n",
+        "name": "Continue Interview",
+        "text": "TEST API REQUEST",
+        "method": "POST",
+        "headers": [
+          [
+            "bland-api-key",
+            "org_5a424edb9482734c49f99b248e02855119423bfa25fad944463628bdd1ae1befacdbd0be5a41db2121dc69"
+          ],
+          [
+            "Content-Type",
+            "application/json"
+          ]
+        ],
+        "max_retries": 0,
+        "modelOptions": {
+          "modelType": "smart",
+          "temperature": 0.2,
+          "skipUserResponse": true,
+          "block_interruptions": true
+        },
+        "responseData": [
+          {
+            "data": "$.applicantInformation.dateApplied",
+            "name": "date_applied",
+            "context": "Extracts the application date from the API response to confirm with the user when they applied for the position."
+          }
+        ],
+        "timeoutValue": 10,
+        "responsePathways": [
+          [
+            "Default/Webhook Completion",
+            "",
+            "",
+            {
+              "id": "3031d519-ff7b-4ede-9647-7e35fb8d34c5",
+              "name": "Confirm Information"
+            }
+          ]
+        ]
+      },
+      "type": "Webhook",
+      "xPos": 160,
+      "yPos": 291.5,
+      "zIndex": 1000,
+      "isStart": false,
+      "position": {
+        "x": 721.3598456917726,
+        "y": 377.5403196089361
+      },
+      "isConnectable": true,
+      "sourcePosition": "bottom",
+      "targetPosition": "top"
+    },
+    {
+      "id": "c13133df-096b-4c2b-aaff-c783ced3e260",
+      "data": {
+        "name": "End Call Node",
+        "text": "Awesome, {{first_name}}! Your interview has been successfully booked for {{interview_date}} at {{interview_time}}. You’ll receive a confirmation email shortly. Let me know if you have any questions before then. Thanks for your time — talk soon!",
+        "modelOptions": {
+          "newTemperature": 0.2,
+          "isSMSReturnNode": false,
+          "skipUserResponse": false,
+          "disableEndCallTool": false,
+          "disableSilenceRepeat": false
+        }
+      },
+      "type": "End Call",
+      "position": {
+        "x": 764.207298110722,
+        "y": 2411.529320424339
+      }
+    },
+    {
+      "id": "07bc12e2-d899-4276-b575-454ed8070026",
+      "data": {
+        "name": "New Default Node",
+        "prompt": "You should inform the user that interviews can only be scheduled between 8:00 AM and 6:00 PM. Kindly ask them to propose a new time within that range.\n\nExample phase: Thanks for your interest! Please note that interviews are only available between 8:00 AM and 6:00 PM. Could you please suggest a different time within that range?\n\n",
+        "modelOptions": {
+          "newTemperature": 0.2,
+          "isSMSReturnNode": false,
+          "skipUserResponse": false,
+          "disableEndCallTool": false,
+          "disableSilenceRepeat": false
+        }
+      },
+      "type": "Default",
+      "position": {
+        "x": 341.7395368364647,
+        "y": 2080.381278907074
+      }
+    },
+    {
+      "id": "87ebac6d-b527-459e-9631-1422c6bc0403",
+      "data": {
+        "name": "Transfer to Recruiter (Salary > 500k)",
+        "prompt": "The user’s salary expectation exceeds $500,000. Politely end the call and inform the candidate that they will be transferred to a recruiter for further assistance.\n",
+        "modelOptions": {
+          "newTemperature": 0.2,
+          "isSMSReturnNode": false,
+          "skipUserResponse": false,
+          "disableEndCallTool": false,
+          "disableSilenceRepeat": false
+        },
+        "transferNumber": "+1580652256",
+        "warmTransferFields": {
+          "isEnabled": false,
+          "fromNumber": "",
+          "agentPrompt": "",
+          "holdMusicUrl": "http://com.twilio.sounds.music.s3.amazonaws.com/MARKOVICHAMP-Borghestral.mp3",
+          "userHandling": "on-hold",
+          "waitingPrompt": "",
+          "optimizeForIVR": true,
+          "mergeCallPrompt": "",
+          "isAgentPromptStatic": false,
+          "useCustomFromNumber": false,
+          "isMergeCallPromptStatic": false
+        },
+        "twilioAppTransferFields": {
+          "appSid": "",
+          "appParams": {},
+          "isEnabled": false
+        }
+      },
+      "type": "Transfer Call",
+      "position": {
+        "x": -343.2938650108325,
+        "y": 1558.437675678925
+      }
+    },
+    {
+      "globalConfig": {
+        "globalPrompt": "You are Blandie, a helpful and professional phone agent working at Bland AI. Your task is to guide users through a pre-screening interview for a Support Engineer position.\n\nSpeak clearly, confirm user responses, and extract key information such as full name, salary expectations, and availability. Follow the exact interview structure defined in the pathway.\n\nAlways extract and store user inputs in the corresponding variables when prompted. Use strict parsing rules for extracting names, phone numbers, and date-related information. If a variable is not captured, prompt the user again until it is successfully extracted.\n\nBe natural, respectful, and precise in your responses.\n\n\n"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "reactflow__edge-1-6431470d-5a67-4365-8142-992c1e2ed8f4",
+      "data": {
+        "label": "User not available",
+        "isHighlighted": false
+      },
+      "type": "custom",
+      "source": "1",
+      "target": "6431470d-5a67-4365-8142-992c1e2ed8f4"
+    },
+    {
+      "id": "reactflow__edge-3031d519-ff7b-4ede-9647-7e35fb8d34c5-63a72361-1272-45ba-ab41-86e4730e0185",
+      "data": {
+        "label": "User Confirmed Date",
+        "description": "Select this pathway if the user confirmed the date they applied on.",
+        "isHighlighted": false
+      },
+      "type": "custom",
+      "source": "3031d519-ff7b-4ede-9647-7e35fb8d34c5",
+      "target": "63a72361-1272-45ba-ab41-86e4730e0185"
+    },
+    {
+      "id": "reactflow__edge-1d079ab8-a1c3-4ea5-b934-89f3d645083a-0d5f50f4-526f-4ca0-b2c7-3961a7604a5a",
+      "data": {
+        "label": "User responded",
+        "isHighlighted": false
+      },
+      "type": "custom",
+      "source": "1d079ab8-a1c3-4ea5-b934-89f3d645083a",
+      "target": "0d5f50f4-526f-4ca0-b2c7-3961a7604a5a"
+    },
+    {
+      "id": "reactflow__edge-1-bb39cede-b0f9-4e91-b69b-d5e424fdc09c",
+      "data": {
+        "label": "User is available",
+        "description": "ONLY select this pathway if the user is available",
+        "isHighlighted": false
+      },
+      "type": "custom",
+      "source": "1",
+      "target": "bb39cede-b0f9-4e91-b69b-d5e424fdc09c"
+    },
+    {
+      "id": "reactflow__edge-0d5f50f4-526f-4ca0-b2c7-3961a7604a5a-5f43d5be-607c-435c-a76b-44a472070925",
+      "data": {
+        "label": "Default/Webhook Completion",
+        "isHighlighted": false
+      },
+      "type": "custom",
+      "source": "0d5f50f4-526f-4ca0-b2c7-3961a7604a5a",
+      "target": "5f43d5be-607c-435c-a76b-44a472070925"
+    },
+    {
+      "id": "reactflow__edge-bb39cede-b0f9-4e91-b69b-d5e424fdc09c-3031d519-ff7b-4ede-9647-7e35fb8d34c5",
+      "data": {
+        "label": "Default/Webhook Completion",
+        "isHighlighted": false
+      },
+      "type": "custom",
+      "source": "bb39cede-b0f9-4e91-b69b-d5e424fdc09c",
+      "target": "3031d519-ff7b-4ede-9647-7e35fb8d34c5"
+    },
+    {
+      "id": "reactflow__edge-63a72361-1272-45ba-ab41-86e4730e0185-1d079ab8-a1c3-4ea5-b934-89f3d645083a",
+      "data": {
+        "label": "User provides a salary expectation Lower or equal than $500,000",
+        "description": "This pathway should be chosen when the user provides a salary expectation Lower or equal than $500,000. It is intended to direct candidates to the “Normal Expectations” route for a customized response.",
+        "isHighlighted": false
+      },
+      "type": "custom",
+      "source": "63a72361-1272-45ba-ab41-86e4730e0185",
+      "target": "1d079ab8-a1c3-4ea5-b934-89f3d645083a"
+    },
+    {
+      "id": "reactflow__edge-63a72361-1272-45ba-ab41-86e4730e0185-72626295-caf6-4355-961c-43611d5796cf",
+      "data": {
+        "label": "User provides a salary expectation higher than $500,000, 500000, 500000 usd. {{year_salary}} > 50000",
+        "description": "{{year_salary}} > 500000",
+        "isHighlighted": false
+      },
+      "type": "custom",
+      "source": "63a72361-1272-45ba-ab41-86e4730e0185",
+      "target": "72626295-caf6-4355-961c-43611d5796cf"
+    },
+    {
+      "id": "reactflow__edge-5f43d5be-607c-435c-a76b-44a472070925-c13133df-096b-4c2b-aaff-c783ced3e260",
+      "data": {
+        "label": "User responded",
+        "isHighlighted": false
+      },
+      "type": "custom",
+      "source": "5f43d5be-607c-435c-a76b-44a472070925",
+      "target": "c13133df-096b-4c2b-aaff-c783ced3e260"
+    },
+    {
+      "id": "reactflow__edge-5f43d5be-607c-435c-a76b-44a472070925-07bc12e2-d899-4276-b575-454ed8070026",
+      "data": {
+        "label": "User provided interview time outside 8am–6pm window.",
+        "description": "Triggered when the user proposes an interview t",
+        "isHighlighted": false
+      },
+      "type": "custom",
+      "source": "5f43d5be-607c-435c-a76b-44a472070925",
+      "target": "07bc12e2-d899-4276-b575-454ed8070026"
+    },
+    {
+      "id": "reactflow__edge-07bc12e2-d899-4276-b575-454ed8070026-c13133df-096b-4c2b-aaff-c783ced3e260",
+      "data": {
+        "label": "User responded",
+        "isHighlighted": false
+      },
+      "type": "custom",
+      "source": "07bc12e2-d899-4276-b575-454ed8070026",
+      "target": "c13133df-096b-4c2b-aaff-c783ced3e260"
+    },
+    {
+      "id": "reactflow__edge-72626295-caf6-4355-961c-43611d5796cf-87ebac6d-b527-459e-9631-1422c6bc0403",
+      "data": {
+        "label": "User responded",
+        "isHighlighted": false
+      },
+      "type": "custom",
+      "source": "72626295-caf6-4355-961c-43611d5796cf",
+      "target": "87ebac6d-b527-459e-9631-1422c6bc0403"
+    }
+  ]
+}
